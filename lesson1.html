@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NORTHSTAR Through the Layers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column. Part A (bronze) decides de-identification per field, Part B (silver) writes change-log entries, Part C (gold) chooses linkage and writes a release note. Every result is already computed from the export. Notes gather at the end for the A3 sheet. Tokens follow the Session 2 STRIDE page. */
+:root{
+  --bg:#F6F7F8; --surface:#FFFFFF; --ink:#1F2A36; --muted:#55626F; --line:#C9D1D8;
+  --accent:#1F6F8B; --accent-soft:#E1EEF2; --flag:#C2571A; --flag-soft:#FBE9DD;
+  --body:'Public Sans', Arial, sans-serif; --mono:'IBM Plex Mono', 'Courier New', monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141B22; --surface:#1C252F; --ink:#E8EDF1; --muted:#A3B0BC; --line:#344250;
+  --accent:#6CB8D2; --accent-soft:#1E3440; --flag:#F09A5E; --flag-soft:#3A2618; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141B22; --surface:#1C252F; --ink:#E8EDF1; --muted:#A3B0BC; --line:#344250;
+  --accent:#6CB8D2; --accent-soft:#1E3440; --flag:#F09A5E; --flag-soft:#3A2618; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:6px}
+h1{font-size:clamp(1.6rem,3.4vw,2.1rem);font-weight:800;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px}
+nav.toc a{font-family:var(--mono);font-weight:600;font-size:14px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+nav.toc a:hover{border-color:var(--accent);color:var(--accent)}
+section{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;scroll-margin-top:16px}
+section h2{margin:0;font-size:1.3rem;text-wrap:balance}
+section p{margin:0;max-width:68ch}
+.label{font-size:.75rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.ran{color:var(--muted);font-size:.95rem}
+.tablewrap{overflow-x:auto;min-width:0}
+table{border-collapse:collapse;font-size:.95rem;min-width:100%}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td code,p code,li code{font-family:var(--mono);font-size:.9em;background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+.hints tr.flag td{background:var(--flag-soft)}
+.hint-toggle{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:.88rem;font-weight:600;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.hint-toggle[aria-pressed="true"]{border-color:var(--flag);color:var(--ink)}
+.hint-toggle .sw{opacity:.35}
+.hint-toggle[aria-pressed="true"] .sw{opacity:1}
+.sw{width:14px;height:14px;border-radius:3px;background:var(--flag-soft);border:1px solid var(--flag);display:inline-block;flex:none}
+.q{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q p{font-weight:600}
+textarea{font:inherit;font-size:.98rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;min-height:76px;resize:vertical;width:100%;box-sizing:border-box}
+textarea:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--flag);outline-offset:2px}
+details{border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+details summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details pre{font-family:var(--mono);font-size:.85rem;overflow-x:auto;margin:10px 0 2px;white-space:pre}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>div{min-width:0}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:0}
+dt{font-family:var(--mono);font-weight:600}
+dd{margin:0}
+a{color:var(--accent)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font:inherit;font-weight:600;padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer}
+button.quiet{background:var(--surface);color:var(--accent)}
+#summary{font-family:var(--body);white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;margin:0;min-height:60px}
+.status{color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<style>
+select,input[type=text]{font:inherit;font-size:.95rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%;box-sizing:border-box;min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:10px}
+@media (max-width:720px){.row2,.row3{grid-template-columns:1fr}}
+.row2 label,.row3 label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted);font-weight:600}
+.layer{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle}
+.bronze{background:#F3E3D3;color:#7A4A1E}.silver{background:#E9ECEF;color:#44525C}.gold{background:#F7ECC8;color:#6E5A14}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bronze{background:#4A331F;color:#F3E3D3} :root:not([data-theme="light"]) .silver{background:#3A4650;color:#E9ECEF} :root:not([data-theme="light"]) .gold{background:#4D4219;color:#F7ECC8}}
+.q textarea{min-height:60px}
+.mini{font-size:.9rem;color:var(--muted)}
+</style>
+<div class="wrap" id="page">
+<header>
+  <span class="label">SkillsHub Retreat · Workstream B, Lesson 1 · pair task</span>
+  <h1>NORTHSTAR through the layers</h1>
+  <p class="sub">About 17 minutes in pairs, then 3 minutes on the A3 sheet. Every result below has already been worked out from the full export. Part A takes the data into bronze, Part B into silver, Part C into gold. Answer each question briefly; your notes are collected at the end.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#about">Data</a><a href="#a1">A · Bronze</a><a href="#b1">B · Silver</a><a href="#c1">C · Gold</a><a href="#notes">Notes</a>
+  </nav>
+</header>
+
+<section id="about">
+  <h2>The data</h2>
+  <p>NORTHSTAR is a fictional study of adults admitted to three hospitals with a new respiratory virus. The REDCap export has 100 records and 102 fields. Every name, NHS number and value is invented. The study will link the cohort to national mortality data to find deaths after discharge, and the linked, versioned dataset will live in a TRE.</p>
+  <p>You do not need to open the data to answer the questions. If you want to look:</p>
+  <ul style="margin:0;padding-left:1.2em">
+    <li><a href="https://github.com/civic-health-innovation-labs/dasc513-data-engineering" target="_blank" rel="noopener">Course data repository on GitHub</a></li>
+    <li><a href="https://raw.githubusercontent.com/civic-health-innovation-labs/dasc513-data-engineering/main/NORTHSTAR_redcap_export.csv" target="_blank" rel="noopener">NORTHSTAR_redcap_export.csv</a> (the export)</li>
+    <li><a href="https://raw.githubusercontent.com/civic-health-innovation-labs/dasc513-data-engineering/main/NORTHSTAR_data_dictionary.csv" target="_blank" rel="noopener">NORTHSTAR_data_dictionary.csv</a> (what each field means)</li>
+  </ul>
+  <div class="grid2">
+    <div><span class="label">The three layers</span>
+      <dl style="margin-top:8px"><dt>Bronze</dt><dd>As received, de-identified, read-only, never edited</dd><dt>Silver</dt><dd>Harmonised: formats, codes, standards. Every change logged with a count</dd><dt>Gold</dt><dd>Linked, versioned, documented. Projects apply for a subset</dd></dl></div>
+    <div><span class="label">Abbreviations in the data</span>
+      <dl style="margin-top:8px"><dt>OSA</dt><dd>Obstructive sleep apnoea</dd><dt>CPAP</dt><dd>Continuous positive airway pressure, a breathing machine</dd><dt>CVA</dt><dd>Cerebrovascular accident (a stroke)</dd><dt>OD · BD · PRN · INH</dt><dd>Once a day · twice a day · as needed · inhaled</dd><dt>CRP</dt><dd>C-reactive protein, a blood test for inflammation, in mg/L</dd><dt>LSOA</dt><dd>Lower layer super output area, a small statistical area of about 1,500 people</dd></dl></div>
+  </div>
+</section>
+
+
+<section id="a1">
+  <span class="label">Part A · field 1 of 6 <span class="layer bronze">bronze</span></span>
+  <h2>Date of birth</h2>
+  <p class="ran">How <code>dob</code> is written at each site, and what a per-site parse gives.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Site</th><th>Example</th><th style="text-align:right">Patients</th><th>Parsed age at admission</th></tr></thead><tbody>
+<tr class="flag"><td>Mersey General</td><td>16/10/1967</td><td class="n">45</td><td>3 to 102 years; one aged 3, two over 100</td></tr>
+<tr><td>Calderbrook</td><td>1966-05-01</td><td class="n">32</td><td>41 to 96 years</td></tr>
+<tr class="flag"><td>Wirral Park</td><td>24-Mar-47</td><td class="n">23</td><td>19 born in the future until the century is corrected; one still impossible (record 63, 11-Apr-26)</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>What should happen to <code>dob</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
+    <div class="row2"><label>Treatment <select id="a1-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a1-c" placeholder="One phrase"></label></div>
+  </div>
+</section>
+
+<section id="a2">
+  <span class="label">Part A · field 2 of 6 <span class="layer bronze">bronze</span></span>
+  <h2>Full postcode</h2>
+  <p class="ran">Postcode districts in the export, after trimming spaces and fixing case. Seven postcodes needed that fixing.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>District</th><th style="text-align:right">Patients</th></tr></thead><tbody>
+<tr><td>L8</td><td class="n">14</td></tr>
+<tr><td>L18</td><td class="n">10</td></tr>
+<tr><td>M40</td><td class="n">8</td></tr>
+<tr><td>WA8</td><td class="n">8</td></tr>
+<tr><td>M20</td><td class="n">8</td></tr>
+<tr><td>L7, L15, L36, CH49</td><td>6 each</td></tr>
+<tr><td>CH44</td><td class="n">5</td></tr>
+<tr><td>WA1, CH42</td><td>4 each</td></tr>
+<tr><td>M14, CH63, CH41</td><td>3 each</td></tr>
+<tr class="flag"><td>PR8, M13, L25</td><td>2 each</td></tr>
+</tbody></table></div><p class="mini">18 districts for 100 people. The full unit postcode (for example L8 0WZ) usually covers about 15 households.</p>
+  <div class="q">
+    <p>What should happen to <code>postcode</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
+    <div class="row2"><label>Treatment <select id="a2-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a2-c" placeholder="One phrase"></label></div>
+  </div>
+</section>
+
+<section id="a3">
+  <span class="label">Part A · field 3 of 6 <span class="layer bronze">bronze</span></span>
+  <h2>Admission date</h2>
+  <p class="ran">Admission dates run from 3 September 2024 to 28 February 2025. Four other date fields depend on it: symptom onset, steroid start, critical care admission and outcome.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Record</th><th>Site</th><th>Admission date</th><th>Outcome date</th><th style="text-align:right">Days</th></tr></thead><tbody>
+<tr><td class="n">12</td><td>Mersey General</td><td>15/01/2025</td><td>22/01/2025</td><td class="n">7</td></tr>
+<tr><td class="n">20</td><td>Calderbrook</td><td>2024-09-08</td><td>2024-09-19</td><td class="n">11</td></tr>
+<tr><td class="n">34</td><td>Wirral Park</td><td>13-Dec-24</td><td>20-Dec-24</td><td class="n">7</td></tr>
+</tbody></table></div><p class="mini">A respiratory study cares about season. A person who knows when a relative was admitted cares about the exact date.</p>
+  <div class="q">
+    <p>What should happen to <code>adm_date</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
+    <div class="row2"><label>Treatment <select id="a3-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a3-c" placeholder="One phrase"></label></div>
+  </div>
+</section>
+
+<section id="a4">
+  <span class="label">Part A · field 4 of 6 <span class="layer bronze">bronze</span></span>
+  <h2>Rare lung disease flag</h2>
+  <p class="ran">Every record where <code>com_rare_ild</code> is 1.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Record</th><th>Site</th><th>Outcome</th></tr></thead><tbody>
+<tr class="flag"><td class="n">23</td><td>Mersey General</td><td>Transferred</td></tr>
+<tr class="flag"><td class="n">58</td><td>Mersey General</td><td>Died</td></tr>
+<tr class="flag"><td class="n">91</td><td>Mersey General</td><td>Transferred</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>What should happen to <code>com_rare_ild</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
+    <div class="row2"><label>Treatment <select id="a4-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a4-c" placeholder="One phrase"></label></div>
+  </div>
+</section>
+
+<section id="a5">
+  <span class="label">Part A · field 5 of 6 <span class="layer bronze">bronze</span></span>
+  <h2>Clinician comments (free text)</h2>
+  <p class="ran">65 of the 100 records have a comment in <code>clinician_comments_txt</code>. 15 contain something identifying. The rest are ward notes such as 'Slow wean from oxygen'.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>What the comment contains</th><th style="text-align:right">Records</th></tr></thead><tbody>
+<tr class="flag"><td>A named consultant, and 'retired midwife at this hospital'</td><td class="n">4</td></tr>
+<tr class="flag"><td>'Ex-employee of the trust, known to the resp team'</td><td class="n">3</td></tr>
+<tr><td>A safeguarding flag on the home address</td><td class="n">3</td></tr>
+<tr><td>Next of kin's name and mobile number</td><td class="n">2</td></tr>
+<tr><td>A street address and the named GP</td><td class="n">1</td></tr>
+<tr><td>An interpreter booking, a daughter's name and phone number</td><td class="n">1</td></tr>
+<tr><td>A chaplain's name and the patient's own words</td><td class="n">1</td></tr>
+<tr class="flag"><td>'Consent withdrawn by patient on day 2. Do not use.'</td><td class="n">1</td></tr>
+</tbody></table></div><p class="mini">A pattern search for phone numbers finds 3 of the 15.</p>
+  <div class="q">
+    <p>What should happen to <code>clinician_comments_txt</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
+    <div class="row2"><label>Treatment <select id="a5-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a5-c" placeholder="One phrase"></label></div>
+  </div>
+</section>
+
+<section id="a6">
+  <span class="label">Part A · field 6 of 6 <span class="layer bronze">bronze</span></span>
+  <h2>GP practice code</h2>
+  <p class="ran"><code>gp_practice_code</code> holds a six-character code such as H95526. The data dictionary does not call it an identifier.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Check</th><th style="text-align:right">Result</th></tr></thead><tbody>
+<tr class="flag"><td>Distinct codes in 100 records</td><td class="n">100</td></tr>
+<tr><td>Records sharing a code with anyone</td><td class="n">0</td></tr>
+</tbody></table></div><p class="mini">In this export every patient has a different practice code. A field that is unique to each person behaves like an identifier, whatever the dictionary calls it.</p>
+  <div class="q">
+    <p>What should happen to <code>gp_practice_code</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
+    <div class="row2"><label>Treatment <select id="a6-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a6-c" placeholder="One phrase"></label></div>
+  </div>
+</section>
+
+<section id="b1">
+  <span class="label">Part B · finding 1 of 5 <span class="layer silver">silver</span></span>
+  <h2>Sex, seven ways</h2>
+  <p class="ran">Every value in <code>sex</code>, counted across all 100 records. The CRF defines 1 as Male and 2 as Female.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Value</th><th style="text-align:right">Records</th></tr></thead><tbody>
+<tr><td>F</td><td class="n">52</td></tr>
+<tr><td>M</td><td class="n">43</td></tr>
+<tr class="flag"><td>Male</td><td class="n">1</td></tr>
+<tr class="flag"><td>female</td><td class="n">1</td></tr>
+<tr class="flag"><td>1</td><td class="n">1</td></tr>
+<tr class="flag"><td>2</td><td class="n">1</td></tr>
+<tr class="flag"><td>Unknown</td><td class="n">1</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>Seven spellings of three values. Write the change-log entry.</p>
+    <div class="row3"><label>Rule<input type="text" id="b1-r" placeholder="What the step does"></label><label>Rows or values affected<input type="text" id="b1-n" placeholder="A number"></label><label>Decision <select id="b1-d"><option value="">Choose</option><option>Correct it, with the rule logged</option><option>Set to missing</option><option>Exclude the record</option><option>Query the site</option><option>Keep both records, add a shared key</option><option>Keep as it is, flag it</option></select></label></div>
+  </div>
+</section>
+
+<section id="b2">
+  <span class="label">Part B · finding 2 of 5 <span class="layer silver">silver</span></span>
+  <h2>Three date formats, and three rows that break the rule</h2>
+  <p class="ran">Each site writes admission dates in its own format. Reading each site with its own format, four rows fail.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Record</th><th>Site</th><th>Admission date as typed</th><th>Why it failed</th></tr></thead><tbody>
+<tr><td class="n">8</td><td>Mersey General</td><td>2024-11-04</td><td>Typed in Calderbrook's format</td></tr>
+<tr><td class="n">52</td><td>Calderbrook</td><td>03-Oct-24</td><td>Typed in Wirral Park's format</td></tr>
+<tr><td class="n">95</td><td>Calderbrook</td><td>11/01/2025</td><td>Typed in Mersey General's format</td></tr>
+<tr class="flag"><td class="n">99</td><td>Mersey General</td><td>(blank)</td><td>Consent withdrawn on day 2; only 14 fields filled</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>Three dates are unambiguous once you look. The fourth row is not a date problem. Write the change-log entry.</p>
+    <div class="row3"><label>Rule<input type="text" id="b2-r" placeholder="What the step does"></label><label>Rows or values affected<input type="text" id="b2-n" placeholder="A number"></label><label>Decision <select id="b2-d"><option value="">Choose</option><option>Correct it, with the rule logged</option><option>Set to missing</option><option>Exclude the record</option><option>Query the site</option><option>Keep both records, add a shared key</option><option>Keep as it is, flag it</option></select></label></div>
+  </div>
+</section>
+
+<section id="b3">
+  <span class="label">Part B · finding 3 of 5 <span class="layer silver">silver</span></span>
+  <h2>The 999 trap</h2>
+  <p class="ran">Values of 999 in three numeric fields and one coded field. The data dictionary does not mention 999; it does say 99 means 'Not known' for ethnic category.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Field</th><th>Records with 999</th><th>What happens if 999 is converted to a number</th></tr></thead><tbody>
+<tr><td>adm_weight_kg</td><td>20, 39</td><td>Two patients weigh 999 kg and pass a range check</td></tr>
+<tr><td>adm_height_cm</td><td>20, 41</td><td>Two patients are 999 cm tall</td></tr>
+<tr><td>crp_adm</td><td>14, 53</td><td>Wirral Park's mean CRP more than doubles</td></tr>
+<tr class="flag"><td>ethnic_category</td><td>33, 70</td><td>Not a number; but records 10 and 98 hold 99, which is a real code</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>Missing markers must be applied before any column is converted to numbers, and 99 is not 999. Write the change-log entry.</p>
+    <div class="row3"><label>Rule<input type="text" id="b3-r" placeholder="What the step does"></label><label>Rows or values affected<input type="text" id="b3-n" placeholder="A number"></label><label>Decision <select id="b3-d"><option value="">Choose</option><option>Correct it, with the rule logged</option><option>Set to missing</option><option>Exclude the record</option><option>Query the site</option><option>Keep both records, add a shared key</option><option>Keep as it is, flag it</option></select></label></div>
+  </div>
+</section>
+
+<section id="b4">
+  <span class="label">Part B · finding 4 of 5 <span class="layer silver">silver</span></span>
+  <h2>Values that cannot be true</h2>
+  <p class="ran">Four values outside the plausible ranges in the data dictionary.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Record</th><th>Field</th><th>Value</th><th>Plausible range</th><th>Likely story</th></tr></thead><tbody>
+<tr><td class="n">12</td><td>temp_adm</td><td>3.7</td><td>34.0 to 42.0</td><td>37.0 with the point in the wrong place</td></tr>
+<tr><td class="n">34</td><td>adm_weight_kg</td><td>750.0</td><td>kg</td><td>75.0 keyed without the point</td></tr>
+<tr><td class="n">55</td><td>adm_height_cm</td><td>1.7</td><td>cm</td><td>Metres typed into a centimetre field</td></tr>
+<tr><td class="n">70</td><td>spo2_adm</td><td>995</td><td>50 to 100</td><td>A repeated digit: 99 or 95?</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>Which of these may be corrected by rule, and which must go back to the site as a query? Write the change-log entry.</p>
+    <div class="row3"><label>Rule<input type="text" id="b4-r" placeholder="What the step does"></label><label>Rows or values affected<input type="text" id="b4-n" placeholder="A number"></label><label>Decision <select id="b4-d"><option value="">Choose</option><option>Correct it, with the rule logged</option><option>Set to missing</option><option>Exclude the record</option><option>Query the site</option><option>Keep both records, add a shared key</option><option>Keep as it is, flag it</option></select></label></div>
+  </div>
+</section>
+
+<section id="b5">
+  <span class="label">Part B · finding 5 of 5 <span class="layer silver">silver</span></span>
+  <h2>One person, two records</h2>
+  <p class="ran">Records 47 and 88 share an NHS number. A match on forename, surname and date of birth did not find them.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Field</th><th>Record 47</th><th>Record 88</th></tr></thead><tbody>
+<tr><td>Site</td><td>Calderbrook</td><td>Mersey General</td></tr>
+<tr><td>Forename</td><td>Patrick</td><td>Patrick</td></tr>
+<tr class="flag"><td>Surname</td><td>Okafor</td><td>Okafoe</td></tr>
+<tr><td>Date of birth</td><td>1964-02-13</td><td>1964-02-13</td></tr>
+<tr><td>NHS number</td><td>9995880571</td><td>9995880571</td></tr>
+<tr class="flag"><td>Postcode</td><td>M20 5GN</td><td>m20 5gn</td></tr>
+<tr><td>Hospital number</td><td>CRI-800331</td><td>MG-196252</td></tr>
+<tr class="flag"><td>Admission date</td><td>2024-12-19</td><td>10/12/2024</td></tr>
+<tr><td>Discharged to</td><td>Home</td><td>Home</td></tr>
+</tbody></table></div>
+  <div class="q">
+    <p>Same person admitted twice, or one admission entered at two sites? Nine days apart, two hospitals, both discharged home. Write the change-log entry.</p>
+    <div class="row3"><label>Rule<input type="text" id="b5-r" placeholder="What the step does"></label><label>Rows or values affected<input type="text" id="b5-n" placeholder="A number"></label><label>Decision <select id="b5-d"><option value="">Choose</option><option>Correct it, with the rule logged</option><option>Set to missing</option><option>Exclude the record</option><option>Query the site</option><option>Keep both records, add a shared key</option><option>Keep as it is, flag it</option></select></label></div>
+  </div>
+</section>
+
+<section id="b6">
+  <span class="label">Part B · meaning <span class="layer silver">silver</span></span>
+  <h2>Three free-text fields that need a code</h2>
+  <p class="ran">Values as typed. <code>com_other_txt</code> has 7 distinct values; <code>meds_on_admission_txt</code> has 80 in 100 records; <code>crp_adm</code> is numeric apart from 999, Unknown, NULL and N/A.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Field</th><th>Values seen</th><th>Terminology</th><th>What has to be decided</th></tr></thead><tbody>
+<tr><td>Other comorbidity</td><td>Bronchiectasis 15, Atrial fibrillation 13, Nil 12, Parkinson's disease 9, OSA on CPAP 8, Previous CVA 7, blank 36</td><td><select id="b6-t1"><option value="">Choose</option><option>SNOMED CT</option><option>ICD-10</option><option>dm+d</option><option>LOINC</option><option>None of these</option></select></td><td><input type="text" id="b6-d1" placeholder="e.g. OSA on CPAP is two facts"></td></tr>
+<tr><td>Medication on admission</td><td>'Metformin 1g BD, Seretide 250 BD', 'see GP summary' (4), 'NKDA' (3), 'unknown, collateral pending' (4)</td><td><select id="b6-t2"><option value="">Choose</option><option>SNOMED CT</option><option>ICD-10</option><option>dm+d</option><option>LOINC</option><option>None of these</option></select></td><td><input type="text" id="b6-d2" placeholder="e.g. split one string into drugs"></td></tr>
+<tr><td>CRP at admission (mg/L)</td><td>25.2, 187.0, 999, Unknown, blank</td><td><select id="b6-t3"><option value="">Choose</option><option>SNOMED CT</option><option>ICD-10</option><option>dm+d</option><option>LOINC</option><option>None of these</option></select></td><td><input type="text" id="b6-d3" placeholder="e.g. 999 is not a result"></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="c1">
+  <span class="label">Part C · problem 1 of 2 <span class="layer gold">gold</span></span>
+  <h2>Linking to mortality data on NHS number</h2>
+  <p class="ran">A valid NHS number has 10 digits, and the last is a check digit calculated from the first nine. Every NHS number in the export was checked. Two fail.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Record</th><th>Site</th><th>NHS number</th><th>Problem</th></tr></thead><tbody>
+<tr class="flag"><td class="n">31</td><td>Calderbrook</td><td>999 123 456</td><td>Nine digits, with spaces</td></tr>
+<tr class="flag"><td class="n">72</td><td>Mersey General</td><td>9991234567</td><td>Ten digits, but the check digit is wrong</td></tr>
+</tbody></table></div>
+  <details><summary>Show the code that produced this</summary><pre>def valid_nhs_number(value):
+    digits = str(value).replace(" ", "")
+    if len(digits) != 10 or not digits.isdigit():
+        return False
+    total = sum(int(d) * (10 - i) for i, d in enumerate(digits[:9]))
+    check = 11 - total % 11
+    check = 0 if check == 11 else check
+    return check != 10 and check == int(digits[9])</pre></details>
+  <div class="q">
+    <p>Which method, who does the matching, what happens to records 31 and 72, and what should be reported afterwards?</p>
+    <div class="row2"><label>Method <select id="c1-m"><option value="">Choose</option><option>Deterministic, on NHS number</option><option>Probabilistic, on several fields</option><option>Split-file via a trusted third party, deterministic</option><option>Split-file via a trusted third party, probabilistic</option></select></label><label>Who matches <select id="c1-w"><option value="">Choose</option><option>The study team</option><option>The TRE data engineer</option><option>A trusted third party</option><option>NHS England</option></select></label></div>
+    <textarea id="c1-a" aria-label="Records 31 and 72, and what to report" placeholder="Records 31 and 72: ... Report: ..."></textarea>
+  </div>
+</section>
+
+<section id="c2">
+  <span class="label">Part C · problem 2 of 2 <span class="layer gold">gold</span></span>
+  <h2>Linking without an NHS number</h2>
+  <p class="ran">A community survey of symptoms after discharge has name, date of birth and postcode, but no NHS number. To see what that is like, every pair of NORTHSTAR records (4,950 pairs) was scored by how many of five fields agree: forename, surname, date of birth, postcode and sex, ignoring capitals and spaces.</p>
+  <div class="tablewrap"><table class=""><thead><tr><th>Fields agreeing</th><th style="text-align:right">Pairs of records</th></tr></thead><tbody>
+<tr><td class="n">0</td><td class="n">2519</td></tr>
+<tr><td class="n">1</td><td class="n">2247</td></tr>
+<tr><td class="n">2</td><td class="n">174</td></tr>
+<tr class="flag"><td class="n">3</td><td class="n">9</td></tr>
+<tr class="flag"><td class="n">4</td><td class="n">1</td></tr>
+<tr><td class="n">5</td><td class="n">0</td></tr>
+</tbody></table></div>
+  <p>The pair with 4 fields agreeing is records 47 and 88 (the duplicate from Part B). All nine pairs with 3 fields agreeing share a forename, surname and sex, and nothing else: for example record 2, another Patrick Okafor, born in 1957 and living in L15.</p>
+  <div class="q">
+    <p>Where would you set the threshold: 3 fields or 4? What goes wrong at each? Which method suits problem 2, who should run it, and what should they report?</p>
+    <div class="row2"><label>Threshold <select id="c2-th"><option value="">Choose</option><option>3 fields</option><option>4 fields</option><option>Depends: review the 3-field pairs by hand</option></select></label><label>Method <select id="c2-m"><option value="">Choose</option><option>Deterministic, on NHS number</option><option>Probabilistic, on several fields</option><option>Split-file via a trusted third party, probabilistic</option></select></label></div>
+    <textarea id="c2-a" aria-label="What goes wrong, who runs it, what to report" placeholder="At 3 fields ... At 4 fields ... Report ..."></textarea>
+  </div>
+</section>
+
+<section id="c3">
+  <span class="label">Part C · the release <span class="layer gold">gold</span></span>
+  <h2>Release note for northstar_v1</h2>
+  <p>The linked dataset is about to be issued as version 1. Researchers will cite it; it will never be edited again. Write the three lines a researcher reads first.</p>
+  <div class="q">
+    <p>What is in it, what was changed or excluded, and what it should not be used for.</p>
+    <label class="mini">What is in it<input type="text" id="c3-1" placeholder="Records, people, sites, period, what it is linked to"></label>
+    <label class="mini">What was changed or excluded<input type="text" id="c3-2" placeholder="The rules from Part B, with counts; anything excluded"></label>
+    <label class="mini">What it should not be used for<input type="text" id="c3-3" placeholder="One limitation a user would trip over"></label>
+  </div>
+</section>
+
+<section id="notes">
+  <h2>Your notes for the A3 sheet</h2>
+  <p>Your answers are collected here. On the A3 sheet, mark where in the pipeline each decision happens and who makes it.</p>
+  <pre id="summary" aria-live="polite"></pre>
+  <div class="actions">
+    <button type="button" id="copy">Copy notes</button>
+    <button type="button" class="quiet" id="clear">Clear my answers</button>
+    <span class="status" id="status"></span>
+  </div>
+  <p class="status">Answers stay in this browser only. Nothing is sent anywhere.</p>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var page=document.getElementById("page"); page.classList.add("hints");
+  var KEY="northstar-layers-v1", S={};
+  try{S=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){S={};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  var fields=Array.prototype.slice.call(document.querySelectorAll("select,textarea,input[type=text]"));
+  fields.forEach(function(el){ if(S[el.id]!=null && !el.value) el.value=S[el.id]; ["input","change"].forEach(function(ev){el.addEventListener(ev,function(){S[el.id]=el.value;save();render();});}); });
+  function v(id){var e=document.getElementById(id);return e&&e.value.trim()?e.value.trim():"?";}
+  var A=[["a1","Date of birth"],["a2","Full postcode"],["a3","Admission date"],["a4","Rare lung disease flag"],["a5","Clinician comments"],["a6","GP practice code"]];
+  var B=[["b1","Sex, seven ways"],["b2","Three date formats"],["b3","The 999 trap"],["b4","Implausible values"],["b5","Records 47 and 88"]];
+  function render(){
+    var out=["PART A, BRONZE: DE-IDENTIFICATION"];
+    A.forEach(function(p){out.push("- "+p[1]+": "+v(p[0]+"-t")+" | costs: "+v(p[0]+"-c"));});
+    out.push("\nPART B, SILVER: CHANGE LOG");
+    B.forEach(function(p){out.push("- "+p[1]+": rule: "+v(p[0]+"-r")+" | affected: "+v(p[0]+"-n")+" | decision: "+v(p[0]+"-d"));});
+    out.push("- Terminologies: comorbidity "+v("b6-t1")+" ("+v("b6-d1")+"); medication "+v("b6-t2")+" ("+v("b6-d2")+"); CRP "+v("b6-t3")+" ("+v("b6-d3")+")");
+    out.push("\nPART C, GOLD: LINKAGE AND RELEASE");
+    out.push("- Problem 1: "+v("c1-m")+" | matched by: "+v("c1-w")+" | "+v("c1-a"));
+    out.push("- Problem 2: threshold "+v("c2-th")+" | "+v("c2-m")+" | "+v("c2-a"));
+    out.push("- Release note northstar_v1:\n  1. "+v("c3-1")+"\n  2. "+v("c3-2")+"\n  3. "+v("c3-3"));
+    document.getElementById("summary").textContent=out.join("\n");
+  }
+  render();
+  var status=document.getElementById("status"), sm=document.getElementById("summary");
+  document.getElementById("copy").addEventListener("click",function(){
+    function fallback(){var r=document.createRange();r.selectNodeContents(sm);var s=window.getSelection();s.removeAllRanges();s.addRange(r);status.textContent="Selected. Press Ctrl+C or Cmd+C to copy.";}
+    try{navigator.clipboard.writeText(sm.textContent).then(function(){status.textContent="Copied.";},fallback);}catch(e){fallback();}
+  });
+  var armed=false;
+  document.getElementById("clear").addEventListener("click",function(){
+    if(!armed){armed=true;this.textContent="Click again to clear";status.textContent="This removes every answer on the page.";return;}
+    S={};try{localStorage.removeItem(KEY);}catch(e){}
+    fields.forEach(function(el){el.value="";});
+    armed=false;this.textContent="Clear my answers";status.textContent="Cleared.";render();
+  });
+})();
+</script>
+</body>
+</html>
