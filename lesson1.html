@@ -125,18 +125,28 @@ select,input[type=text]{font:inherit;font-size:.95rem;color:var(--ink);backgroun
   <span class="label">Part A · field 2 of 6 <span class="layer bronze">bronze</span></span>
   <h2>Full postcode</h2>
   <p class="ran">Postcode districts in the export, after trimming spaces and fixing case. Seven postcodes needed that fixing.</p>
-  <div class="tablewrap"><table class=""><thead><tr><th>District</th><th style="text-align:right">Patients</th></tr></thead><tbody>
+  <div class="grid2"><div><div class="tablewrap"><table><thead><tr><th>District</th><th style="text-align:right">Patients</th></tr></thead><tbody>
 <tr><td>L8</td><td class="n">14</td></tr>
 <tr><td>L18</td><td class="n">10</td></tr>
+<tr><td>M20</td><td class="n">8</td></tr>
 <tr><td>M40</td><td class="n">8</td></tr>
 <tr><td>WA8</td><td class="n">8</td></tr>
-<tr><td>M20</td><td class="n">8</td></tr>
-<tr><td>L7, L15, L36, CH49</td><td>6 each</td></tr>
+<tr><td>CH49</td><td class="n">6</td></tr>
+<tr><td>L15</td><td class="n">6</td></tr>
+<tr><td>L36</td><td class="n">6</td></tr>
+<tr><td>L7</td><td class="n">6</td></tr>
+</tbody></table></div></div><div><div class="tablewrap"><table><thead><tr><th>District</th><th style="text-align:right">Patients</th></tr></thead><tbody>
 <tr><td>CH44</td><td class="n">5</td></tr>
-<tr><td>WA1, CH42</td><td>4 each</td></tr>
-<tr><td>M14, CH63, CH41</td><td>3 each</td></tr>
-<tr class="flag"><td>PR8, M13, L25</td><td>2 each</td></tr>
-</tbody></table></div><p class="mini">18 districts for 100 people. The full unit postcode (for example L8 0WZ) usually covers about 15 households.</p>
+<tr><td>CH42</td><td class="n">4</td></tr>
+<tr><td>WA1</td><td class="n">4</td></tr>
+<tr><td>CH41</td><td class="n">3</td></tr>
+<tr><td>CH63</td><td class="n">3</td></tr>
+<tr><td>M14</td><td class="n">3</td></tr>
+<tr class="flag"><td>L25</td><td class="n">2</td></tr>
+<tr class="flag"><td>M13</td><td class="n">2</td></tr>
+<tr class="flag"><td>PR8</td><td class="n">2</td></tr>
+</tbody></table></div></div></div>
+  <p class="mini">18 districts for 100 people; three hold only 2 patients each. The full unit postcode (for example L8 0WZ) usually covers about 15 households.</p>
   <div class="q">
     <p>What should happen to <code>postcode</code> before it enters bronze, and what does that cost a study of deaths after discharge?</p>
     <div class="row2"><label>Treatment <select id="a2-t"><option value="">Choose a treatment</option><option>Keep as it is</option><option>Remove entirely</option><option>Replace with a study ID or key</option><option>Generalise (age, band, district)</option><option>Convert to days from admission, or shift</option><option>Suppress, or collapse into 'other'</option><option>Hold back; manual review before any use</option></select></label><label>What it costs this study<input type="text" id="a2-c" placeholder="One phrase"></label></div>
